@@ -5,7 +5,7 @@ const router = expresss.Router();
 
 const activatedMissionRouter = (activatedMissionService) => {
     const activatedMissionController = new ActivatedMissionController(activatedMissionService);
-    router.post("/activated-missions", activatedMissionController.handleAddActivatedMission.bind(activatedMissionController));
+    router.post("/", activatedMissionController.handleAddActivatedMission.bind(activatedMissionController));
     return router;
 }
 

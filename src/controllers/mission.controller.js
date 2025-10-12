@@ -1,4 +1,4 @@
-import { createMissionRequest } from "../dtos/mission.dto";
+import { createMissionRequest } from "../dtos/mission.dto.js";
 
 class MissionController {
     constructor(missionService) {
@@ -7,6 +7,7 @@ class MissionController {
 
     async handleAddMission(req, res, next) {
         try {
+            console.log("미션 추가 요청 받음");
             const missionData = req.body;
             const newMission = await this.missionService.addMission(createMissionRequest(missionData));
             return res.success({

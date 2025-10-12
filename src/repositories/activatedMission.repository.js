@@ -1,4 +1,5 @@
-import { pool } from "../config/db.config.js";
+import { pool } from "../db.config.js";
+import { InternalServerError, NotFoundError } from "../middlewares/error.js";
 
 class ActivatedMissionRepository {
     constructor() {}
@@ -11,7 +12,8 @@ class ActivatedMissionRepository {
             );
             return result.insertId;
         } catch (err) {
-            throw new Error(`활성화된 미션 추가 중 오류가 발생했습니다: ${err.message}`);
+            console.error(err);
+            throw new InternalServerError('활성화된 미션 추가 중에 데이터베이스 오류가 발생했습니다.');
         } finally {
             conn.release();
         }
@@ -21,12 +23,12 @@ class ActivatedMissionRepository {
         const conn = await pool.getConnection();
         try { 
             const [activatedMissions] = await conn.query(
-                `SELECT * FROM activated_mission WHERE activated_mission_id = ?`,
+                `SELECT * FROM activated_mission WHERE id = ?`,
                 [activatedMissionId]
             );
             return activatedMissions.length > 0 ? activatedMissions[0] : null;
         } catch (err) {
-            throw new Error(`활성화된 미션 조회 중 오류가 발생했습니다: ${err.message}`);
+            throw new InternalServerError('활성화된 미션 조회 중에 데이터베이스 오류가 발생했습니다.');
         } finally {
             conn.release();
         } 

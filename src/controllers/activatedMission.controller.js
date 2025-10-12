@@ -1,4 +1,4 @@
-import { createActivatedMissionRequest } from "../dtos/activatedMission.dto";
+import { createActivatedMissionRequest } from "../dtos/activatedMission.dto.js";
 
 class ActivatedMissionController {
     constructor(activatedMissionService) {
@@ -7,6 +7,7 @@ class ActivatedMissionController {
 
     async handleAddActivatedMission(req, res, next) {
         try {
+            console.log("활성화된 미션 추가 요청 받음");
             const activatedMissionData = req.body;
             const newActivatedMission = await this.activatedMissionService.addActivatedMission(createActivatedMissionRequest(activatedMissionData));
             return res.success({

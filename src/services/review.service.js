@@ -1,5 +1,5 @@
-import { createReviewResponse } from "../dtos/review.dto";
-import { NotFoundError, InternalServerError } from "../middlewares/error";   
+import { createReviewResponse } from "../dtos/review.dto.js";
+import { NotFoundError, InternalServerError } from "../middlewares/error.js";   
 
 class ReviewService {
     constructor(reviewRepository, storeRepository) {
@@ -9,15 +9,15 @@ class ReviewService {
     async addReview(reviewData) {
         try {
             // 가게가 존재하는지 확인
-            if (!await this.storeRepository.getStoreById(reviewData.storeId)) {
-                throw new NotFoundError('가게를 찾을 수 없습니다.');
-            }
+            // if (!await this.storeRepository.getStoreById(reviewData.storeId)) {
+            //     throw new NotFoundError('가게를 찾을 수 없습니다.');
+            // }
             const newReview = await this.reviewRepository.addReview(reviewData);
 
             // 이미지 업로드
             // TODO: s3에서 이미지 url를 가져오는 로직
             const imageUrl = ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]; // 예시 URL
-            if (reviewData.images && reviewData.images.length === reviewData.imgCount) {
+            if (imageUrl.length === reviewData.imgCount) {
                 await this.reviewRepository.addReviewImages(newReview, imageUrl);
             }
             else {

@@ -1,11 +1,10 @@
-import expresss from "express";
+import express from "express";
 import ReviewController from "../controllers/review.controller.js";
 
-const router = expresss.Router();
-
 const reviewRouter = (reviewService) => {  
+    const router = express.Router();
     const reviewController = new ReviewController(reviewService);
-    router.post("/reviews", reviewController.handleAddReview.bind(reviewController));
+    router.post("/", reviewController.handleAddReview.bind(reviewController));
     return router;
 }
 

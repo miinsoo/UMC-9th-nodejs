@@ -1,4 +1,4 @@
-import { pool } from "../config/db.config.js";
+import { pool } from "../db.config.js";
 
 
 class MissionRepository {
@@ -8,7 +8,7 @@ class MissionRepository {
         const conn = await pool.getConnection();
         try {
             const [result] = await conn.query(
-                `INSERT INTO missions (store_id, min_payment_amount, reword_points, deadline) VALUES (?, ?, ?, ?)`,
+                `INSERT INTO mission (store_id, min_payment_amount, reward_points, dead_line) VALUES (?, ?, ?, ?)`,
                 [missionData.storeId, missionData.minPaymentAmount, missionData.rewardPoints, missionData.deadline]
             );
             return result.insertId;
@@ -23,7 +23,7 @@ class MissionRepository {
         const conn = await pool.getConnection();
         try {
             const [missions] = await conn.query(
-                `SELECT * FROM missions WHERE mission_id = ?`,
+                `SELECT * FROM mission WHERE id = ?`,
                 [missionId]
             );
             return missions.length > 0 ? missions[0] : null;

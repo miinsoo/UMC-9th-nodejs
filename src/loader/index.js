@@ -1,24 +1,25 @@
 // import Router
-import missionRouter from "./routes/mission.route.js";
-import reviewRouter from "./routes/review.route.js";
-import storeRouter from "./routes/store.route.js";
-import activatedMissionRouter from "./routes/activatedMission.route.js";
+import missionRouter from "../routes/mission.route.js";
+import reviewRouter from "../routes/review.route.js";
+import storeRouter from "../routes/store.route.js";
+import activatedMissionRouter from "../routes/activatedMission.route.js";
 // import controller
-import MissionController from "./controllers/mission.controller.js";
-import ReviewController from "./controllers/review.controller.js";
-import StoreController from "./controllers/store.controller.js";
-import ActivatedMissionController from "./controllers/activatedMission.controller.js";
+import MissionController from "../controllers/mission.controller.js";
+import ReviewController from "../controllers/review.controller.js";
+import StoreController from "../controllers/store.controller.js";
+import ActivatedMissionController from "../controllers/activatedMission.controller.js";
 // import service
-import MissionService from "./services/mission.service.js";
-import ReviewService from "./services/review.service.js";
-import StoreService from "./services/store.service.js";
-import ActivatedMissionService from "./services/activatedMission.service.js";
+import MissionService from "../services/mission.service.js";
+import ReviewService from "../services/review.service.js";
+import StoreService from "../services/store.service.js";
+import ActivatedMissionService from "../services/activatedMission.service.js";
 // import repository
-import MissionRepository from "./repositories/mission.repository.js";
-import ReviewRepository from "./repositories/review.repository.js";
-import StoreRepository from "./repositories/store.repository.js";
-import ActivatedMissionRepository from "./repositories/activatedMission.repository.js";
+import MissionRepository from "../repositories/mission.repository.js";
+import ReviewRepository from "../repositories/review.repository.js";
+import StoreRepository from "../repositories/store.repository.js";
+import ActivatedMissionRepository from "../repositories/activatedMission.repository.js";
 
+console.log("loader index.js 실행됨");
 // create repository
 const missionRepository = new MissionRepository();
 const reviewRepository = new ReviewRepository();
@@ -38,7 +39,7 @@ const storeController = new StoreController(storeService);
 const activatedMissionController = new ActivatedMissionController(activatedMissionService);
 
 // create router
-const missionRoute = missionRouter(missionService);
+const missionRoute = missionRouter(missionService, activatedMissionService);
 const reviewRoute = reviewRouter(reviewService);
 const storeRoute = storeRouter(storeService);
 const activatedMissionRoute = activatedMissionRouter(activatedMissionService);

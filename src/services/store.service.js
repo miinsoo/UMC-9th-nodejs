@@ -1,5 +1,5 @@
 import { createStoreResponse } from "../dtos/store.dto.js";
-import { NotFoundError, InternalServerError } from "../middlewares/error";
+import { NotFoundError, InternalServerError } from "../middlewares/error.js";
 
 class StoreService {
   constructor(storeRepository) {
@@ -15,6 +15,7 @@ class StoreService {
             return createStoreResponse(store);
         } catch (error) {
             if (error instanceof NotFoundError) {
+                console.error(error);
                 throw error;
             }
             console.error(error);

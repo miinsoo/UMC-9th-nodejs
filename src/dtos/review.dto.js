@@ -1,10 +1,10 @@
 export const createReviewRequest = (body) => {
   return {
-    storeId: body.storeId,
-    userId: body.userId,
+    storeId: body.store_id,
+    userId: body.user_id,
     text: body.text,
     rating: body.rating,
-    imgCount: body.imgCount,
+    imgCount: body.img_count,
   };
 };
 

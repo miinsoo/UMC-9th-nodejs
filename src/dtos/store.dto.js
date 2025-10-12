@@ -1,9 +1,10 @@
 export const createStoreRequest = (body) => {
   return {
-    storeName: body.storeName,
-    storeAddress: body.storeAddress,
-    foodType: body.foodType,
+    storeName: body.store_name,
+    storeAddress: body.store_address,
+    foodType: body.food_type,
     town: body.town,
+    userId: body.user_id,
   };
 };
 
@@ -13,7 +14,6 @@ export const createStoreResponse = (store) => {
     storeName: store.store_name,
     storeAddress: store.store_address,
     foodType: store.food_type_id,
-    town: body.town_id,
-    createdAt: store.created_at
+    town: store.town_id,
   };
 };

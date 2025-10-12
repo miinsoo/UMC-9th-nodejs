@@ -1,11 +1,11 @@
-import { createReviewRequest } from "../dtos/review.dto";
+import { createReviewRequest } from "../dtos/review.dto.js";
 
-class reviewController {
+class ReviewController {
     constructor(reviewService) {
         this.reviewService = reviewService;
     }
 
-    async handleAddreview(req, res, next) {
+    async handleAddReview(req, res, next) {
         try {
             const reviewData = req.body;
             const newReview = await this.reviewService.addReview(createReviewRequest(reviewData));
@@ -19,7 +19,6 @@ class reviewController {
         }       
     }
 
-    
 }
 
-export default reviewController;
+export default ReviewController;

@@ -1,5 +1,5 @@
-import { createMissionResponse } from "../dtos/mission.dto";
-import { NotFoundError, InternalServerError } from "../middlewares/error";   
+import { createMissionResponse } from "../dtos/mission.dto.js";
+import { NotFoundError, InternalServerError } from "../middlewares/error.js";   
 
 class MissionService {
     constructor(missionRepository, storeRepository) {

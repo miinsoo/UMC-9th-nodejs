@@ -1,12 +1,16 @@
-import expresss from "express";
+import express from "express";
 import MissionController from "../controllers/mission.controller.js";
+import ActivatedMissionController from "../controllers/activatedMission.controller.js";
 
-const router = expresss.Router();
-
-const missionRouter = (missionService) => {
+const missionRouter = (missionService, activatedMissionService) => {
+    const router = express.Router();
     const missionController = new MissionController(missionService);
-    router.post("/missions", missionController.handleAddMission.bind(missionController));
-    return router;
+    router.post("/", missionController.handleAddMission.bind(missionController));
+
+  const activatedMissionController = new ActivatedMissionController(activatedMissionService);
+  router.post("/activated", activatedMissionController.handleAddActivatedMission.bind(activatedMissionController));
+
+  return router;
 }
 
 export default missionRouter;

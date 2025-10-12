@@ -1,5 +1,5 @@
-import { createActivatedMissionResponse } from "../dtos/activatedMission.dto";
-import { NotFoundError, InternalServerError } from "../middlewares/error";   
+import { createActivatedMissionResponse } from "../dtos/activatedMission.dto.js";
+import { NotFoundError, InternalServerError } from "../middlewares/error.js";   
 
 class ActivatedMissionService {
     constructor(activatedMissionRepository, missionRepository) {
@@ -8,6 +8,7 @@ class ActivatedMissionService {
     }   
     async addActivatedMission(activatedMissionData) {
         try {
+            console.log("서비스 레이어의 addActivatedMission 도달");
             // 미션이 존재하는지 확인   
             if (!await this.missionRepository.getMissionById(activatedMissionData.missionId)) {
                 throw new NotFoundError('미션을 찾을 수 없습니다.');

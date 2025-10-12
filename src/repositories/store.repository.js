@@ -7,11 +7,12 @@ class StoreRepository {
         const conn = await pool.getConnection();
         try {
             const [result] = await conn.query(
-                `INSERT INTO stores (store_name, store_address, food_type_id) VALUES (?, ?, ?)`,
-                [storeData.storeName, storeData.storeAddress, storeData.foodType]
+                `INSERT INTO store (name, address, food_type_id, town_id, user_id) VALUES (?, ?, ?, ?, ?)`,
+                [storeData.storeName, storeData.storeAddress, storeData.foodType, storeData.town, storeData.userId]
             );
             return result.insertId;
         } catch (err) {
+            console.error(err);
             throw new InternalServerError('가게 추가 중에 데이터베이스 오류가 발생했습니다.');
         } finally {
             conn.release();
@@ -21,7 +22,7 @@ class StoreRepository {
         const conn = await pool.getConnection();    
         try {
             const [stores] = await conn.query(
-                `SELECT * FROM stores WHERE store_id = ?`,
+                `SELECT * FROM store WHERE id = ?`,
                 [storeId]
             );
             return stores.length > 0 ? stores[0] : null;

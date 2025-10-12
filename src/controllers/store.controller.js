@@ -1,5 +1,5 @@
 import e from "cors";
-import { createStoreRequest } from "../dtos/store.dto";
+import { createStoreRequest } from "../dtos/store.dto.js";
 
 class StoreController {
     constructor(storeService) {
@@ -8,6 +8,7 @@ class StoreController {
 
     async handleAddStore(req, res, next) {
         try {
+            console.log("가게 추가 요청 받음");
             const storeData = req.body;
             const newStore = await this.storeService.addStore(createStoreRequest(storeData));
             return res.success({
