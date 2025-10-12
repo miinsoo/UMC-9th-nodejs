@@ -39,10 +39,10 @@ const storeController = new StoreController(storeService);
 const activatedMissionController = new ActivatedMissionController(activatedMissionService);
 
 // create router
-const missionRoute = missionRouter(missionService, activatedMissionService);
-const reviewRoute = reviewRouter(reviewService);
-const storeRoute = storeRouter(storeService);
-const activatedMissionRoute = activatedMissionRouter(activatedMissionService);
+const missionRoute = missionRouter(missionController, activatedMissionController);
+const reviewRoute = reviewRouter(reviewController);
+const storeRoute = storeRouter(storeController);
+const activatedMissionRoute = activatedMissionRouter(activatedMissionController);
 
 export {
     missionRoute,
