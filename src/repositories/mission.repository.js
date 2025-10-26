@@ -24,13 +24,36 @@ class MissionRepository {
     }
 
     async getMissionById(missionId) {
-        try {
+        try {   
             const result = await prisma.mission.findUnique({
                 where: {
                     id: missionId,
                 },
             });
+            const storeName = await prisma.store.findUnique({
+                where: {
+                    id: result.storeId,
+                },
+                select: {
+                    name: true,
+                },
+            });
+            result.storeName = storeName ? storeName.name : null;
             return convertBigIntsToNumbers(result);
+        } catch (err) {
+            console.error(err);
+            throw new Error(`미션 조회 중 오류가 발생했습니다: ${err.message}`);
+        }
+    }
+
+    async getMissionByStoreId(storeId) {
+        try {
+            const result = await prisma.mission.findMany({
+                where: {
+                    storeId: storeId,
+                },
+            });
+            return result.map(convertBigIntsToNumbers);
         } catch (err) {
             console.error(err);
             throw new Error(`미션 조회 중 오류가 발생했습니다: ${err.message}`);

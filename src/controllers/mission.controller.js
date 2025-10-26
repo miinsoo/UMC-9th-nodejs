@@ -1,4 +1,4 @@
-import { createMissionRequest } from "../dtos/mission.dto.js";
+import { createMissionRequest, getMissionByStoreIdRequest } from "../dtos/mission.dto.js";
 
 class MissionController {
     constructor(missionService) {
@@ -22,7 +22,21 @@ class MissionController {
             next(error);
         }       
     }
-    
+    async handleGetMissionByStoreId(req, res, next) {
+        try {
+            console.log("미션 조회 요청 받음");
+            const params = req.params;
+            const mission = await this.missionService.getMissionByStoreId(getMissionByStoreIdRequest(params));
+            console.log(mission);
+            return res.success({
+                code: 200,
+                message: "미션을 성공적으로 조회했습니다.",
+                result: mission,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default MissionController;

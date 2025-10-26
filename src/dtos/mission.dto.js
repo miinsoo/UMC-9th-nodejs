@@ -8,10 +8,26 @@ export const createMissionRequest = (body) => {
     }    
 };
 
+export const getMissionByStoreIdRequest = (params) => {
+    return {
+        storeId: Number(params.storeId),
+    };
+}
+
 export const createMissionResponse = (mission) => {
     return {
-        missionId: mission.missionId,
+        missionId: mission.id,
         storeId: mission.storeId,
+        minPaymentAmount: mission.minPaymentAmount,
+    };
+};
+
+export const getMissionByStoreIdResponse = (mission) => {
+    return {
+        missionId: mission.id,
+        storeId: mission.storeId,
+        rewardPoints: mission.rewardPoints,
+        deadLine: mission.deadLine,
         minPaymentAmount: mission.minPaymentAmount,
     };
 };
