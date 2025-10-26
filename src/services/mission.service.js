@@ -13,11 +13,11 @@ class MissionService {
                 throw new NotFoundError('가게를 찾을 수 없습니다.');
             }
             const newMission = await this.missionRepository.addMission(missionData);
-            const mission = await this.missionRepository.getMissionById(newMission);
-            if (!mission) {
+            if (!newMission) {
                 throw new NotFoundError('미션을 찾을 수 없습니다.');
             }
-            return createMissionResponse(mission);
+            console.log("미션 서비스 레이어 완료");
+            return createMissionResponse(newMission);
         } catch (error) {
             if (error instanceof NotFoundError) {
                 throw error;

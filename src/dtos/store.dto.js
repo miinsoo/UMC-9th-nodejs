@@ -10,10 +10,10 @@ export const createStoreRequest = (body) => {
 
 export const createStoreResponse = (store) => {
   return {
-    storeId: store.store_id,
-    storeName: store.store_name,
-    storeAddress: store.store_address,
-    foodType: store.food_type_id,
-    town: store.town_id,
+    storeId: store.storeId,
+    storeName: store.storeName,
+    storeAddress: store.storeAddress,
+    foodType: store.foodTypeId,
+    town: store.townId,
   };
 };

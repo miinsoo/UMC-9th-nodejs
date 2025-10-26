@@ -1,36 +1,39 @@
-import { pool } from "../db.config.js";
-
+import { prisma } from "../db.config.js";
+import { convertBigIntsToNumbers } from "../libs/ dataTransformer.js";
 
 class MissionRepository {
     constructor() {}
 
     async addMission(missionData) {
-        const conn = await pool.getConnection();
         try {
-            const [result] = await conn.query(
-                `INSERT INTO mission (store_id, min_payment_amount, reward_points, dead_line) VALUES (?, ?, ?, ?)`,
-                [missionData.storeId, missionData.minPaymentAmount, missionData.rewardPoints, missionData.deadline]
-            );
-            return result.insertId;
+            console.log("Adding mission with data:", missionData);
+            const result = await prisma.mission.create({
+                data: {
+                    storeId: missionData.storeId,
+                    minPaymentAmount: missionData.minPaymentAmount,
+                    rewardPoints: missionData.rewardPoints,
+                    deadLine: missionData.deadLine,
+                },
+            });
+            console.log("test");
+            return convertBigIntsToNumbers(result);
         } catch (err) {
+            console.error(err);
             throw new Error(`미션 추가 중 오류가 발생했습니다: ${err.message}`);
-        } finally {
-            conn.release();
         }
     }
 
     async getMissionById(missionId) {
-        const conn = await pool.getConnection();
         try {
-            const [missions] = await conn.query(
-                `SELECT * FROM mission WHERE id = ?`,
-                [missionId]
-            );
-            return missions.length > 0 ? missions[0] : null;
+            const result = await prisma.mission.findUnique({
+                where: {
+                    id: missionId,
+                },
+            });
+            return convertBigIntsToNumbers(result);
         } catch (err) {
+            console.error(err);
             throw new Error(`미션 조회 중 오류가 발생했습니다: ${err.message}`);
-        } finally {
-            conn.release();
         }
     }
 }

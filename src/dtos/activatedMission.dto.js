@@ -7,8 +7,8 @@ export const createActivatedMissionRequest = (body) => {
 
 export const createActivatedMissionResponse = (activatedMission) => {
   return {
-    userMissionId: activatedMission.user_mission_id,
-    missionId: activatedMission.mission_id,
-    userId: activatedMission.user_id,
+    userMissionId: activatedMission.userMissionId,
+    missionId: activatedMission.missionId,
+    userId: activatedMission.userId,
   };
 };

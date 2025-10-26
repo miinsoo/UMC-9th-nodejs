@@ -8,11 +8,10 @@ class StoreService {
     async addStore(storeData) {
         try {
             const newStore = await this.storeRepository.addStore(storeData);
-            const store = await this.storeRepository.getStoreById(newStore);
-            if (!store) {
+            if (!newStore) {
                 throw new NotFoundError('가게를 찾을 수 없습니다.');
             }
-            return createStoreResponse(store);
+            return createStoreResponse(newStore);
         } catch (error) {
             if (error instanceof NotFoundError) {
                 console.error(error);

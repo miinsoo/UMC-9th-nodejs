@@ -4,14 +4,14 @@ export const createMissionRequest = (body) => {
         storeId: body.store_id,
         minPaymentAmount: body.min_payment_amount,
         rewardPoints: body.reward_points,
-        deadline: body.deadline,
+        deadLine: body.dead_line,
     }    
 };
 
 export const createMissionResponse = (mission) => {
     return {
-        missionId: mission.mission_id,
-        storeId: mission.store_id,
-        minPaymentAmount: mission.min_payment_amount,
+        missionId: mission.missionId,
+        storeId: mission.storeId,
+        minPaymentAmount: mission.minPaymentAmount,
     };
 };

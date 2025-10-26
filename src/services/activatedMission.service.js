@@ -14,7 +14,7 @@ class ActivatedMissionService {
                 throw new NotFoundError('미션을 찾을 수 없습니다.');
             }
             const newActivatedMission = await this.activatedMissionRepository.addActivatedMission(activatedMissionData);
-            const activatedMission = await this.activatedMissionRepository.getActivatedMissionById(newActivatedMission);
+            const activatedMission = await this.activatedMissionRepository.getActivatedMissionById(newActivatedMission.id);
             if (!activatedMission) {
                 throw new NotFoundError('활성화된 미션을 찾을 수 없습니다.');
             }

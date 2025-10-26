@@ -46,3 +46,4 @@ junit.xml
 .project
 .settings
 tmp/
+/src/generated/prisma

@@ -18,14 +18,14 @@ class ReviewService {
             // TODO: s3에서 이미지 url를 가져오는 로직
             const imageUrl = ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]; // 예시 URL
             if (imageUrl.length === reviewData.imgCount) {
-                await this.reviewRepository.addReviewImages(newReview, imageUrl);
+                await this.reviewRepository.addReviewImages(newReview.id, imageUrl);
             }
             else {
                 throw new InternalServerError('S3에서 충분한 이미지 url을 가져오지 못했습니다.');
             }
 
             // 추가된 리뷰 정보 반환
-            const review = await this.reviewRepository.getReviewById(newReview);
+            const review = await this.reviewRepository.getReviewById(newReview.id);
             if (!review) {
                 throw new NotFoundError('리뷰를 찾을 수 없습니다.');
             }

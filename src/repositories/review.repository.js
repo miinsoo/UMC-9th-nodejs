@@ -1,73 +1,78 @@
-import { pool } from "../db.config.js";
+import { prisma } from "../db.config.js";
 import { InternalServerError, NotFoundError } from "../middlewares/error.js";
+import { convertBigIntsToNumbers } from "../libs/ dataTransformer.js";
 
 class ReviewRepository {
     constructor() {}   
     async addReview(reviewData) {
-        const conn = await pool.getConnection();
         try {
-            const [result] = await conn.query(
-                `INSERT INTO review (store_id, user_id, text, rating) VALUES (?, ?, ?, ?)`,
-                [reviewData.storeId, reviewData.userId, reviewData.text, reviewData.rating]
-            );
-            return result.insertId;
+            const result = await prisma.review.create({
+                data: {
+                    storeId: reviewData.storeId,
+                    userId: reviewData.userId,
+                    text: reviewData.text,
+                    rating: reviewData.rating,
+                },
+            });
+            return convertBigIntsToNumbers(result);
         } catch (err) {
             console.error(err);
             throw new InternalServerError('리뷰 추가 중에 데이터베이스 오류가 발생했습니다.');
-        } finally {
-            conn.release();
-        }  
+        }
     }
 
     async addReviewImages(reviewId, imageUrls) {
-        const conn = await pool.getConnection();
         try {
-            // S3에서 이미지 URL을 받아서 review_imgs 테이블에 삽입
-            const insertPromises = imageUrls.map(url => {
-                return conn.query(
-                    `INSERT INTO review_img (review_id, img_url) VALUES (?, ?)`,
-                    [reviewId, url]
-                );
-            });
-            await Promise.all(insertPromises);
+            const ops = imageUrls.map((url) =>
+                prisma.reviewImg.create({
+                    data: {
+                        reviewId: reviewId,
+                        imgUrl: url,
+                    },
+                })
+            );
+
+            await prisma.$transaction(ops);
             return;
         } catch (err) {
             console.error(err);
             throw new InternalServerError('리뷰 이미지 추가 중에 데이터베이스 오류가 발생했습니다.');
-        } finally {
-            conn.release();
         }
     }
 
     async getReviewById(reviewId) {
-        const conn = await pool.getConnection();
         try {
-            const [reviews] = await conn.query(
-                `SELECT r.id, r.store_id, s.name, r.user_id, r.text, r.rating, 
-                        GROUP_CONCAT(ri.img_url) AS images, r.created_at
-                 FROM review r
-                 LEFT JOIN review_img ri ON r.id = ri.review_id
-                 JOIN store s ON r.store_id = s.id
-                 WHERE r.id = ?
-                 GROUP BY r.id, r.store_id, s.name, r.user_id, r.text, r.rating, r.created_at`,
-                [reviewId]
-            );
-            const review = reviews[0];
-            if (!review) {
+            const result = await prisma.review.findUnique({
+                where: {
+                    id: reviewId,
+                },
+                include: {
+                    reviewImgs: true,
+                    store: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                },
+            });
+
+            if (!result) {
                 return null;
             }
+
             return {
-                ...review, 
-                images: review.images ? review.images.split(',') : [], 
+                id: result.id,
+                store_id: result.storeId,
+                store_name: result.store.name,
+                user_id: result.userId,
+                text: result.text,
+                rating: result.rating,
+                images: result.reviewImgs.map(img => img.img_url),
+                created_at: result.created_at,
             };
         } catch (err) {
-            if (err instanceof NotFoundError) {
-                throw err;
-            }
             console.error(err);
             throw new InternalServerError('리뷰 정보를 가져오는 중에 데이터베이스 오류가 발생했습니다.');
-        } finally {
-            conn.release();
         }
     }
 }
