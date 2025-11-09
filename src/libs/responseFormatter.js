@@ -17,4 +17,4 @@ export const createResponse = ({ resultType, message, error, success }) => {
     error,
     success,
   };
-};
+}; 
