@@ -1,4 +1,5 @@
 import { prisma } from "../db.config.js";
+import { InternalServerError, NotFoundError } from "../middlewares/error.js";
 import { convertBigIntsToNumbers } from "../libs/ dataTransformer.js";
 
 class MissionRepository {
@@ -19,7 +20,7 @@ class MissionRepository {
             return convertBigIntsToNumbers(result);
         } catch (err) {
             console.error(err);
-            throw new Error(`미션 추가 중 오류가 발생했습니다: ${err.message}`);
+            throw new InternalServerError('미션 추가 중에 데이터베이스 오류가 발생했습니다.');
         }
     }
 
@@ -30,6 +31,11 @@ class MissionRepository {
                     id: missionId,
                 },
             });
+            // 미션이 없을 경우 null 반환
+            if (!result) {
+                return null;
+            }
+
             const storeName = await prisma.store.findUnique({
                 where: {
                     id: result.storeId,
@@ -42,7 +48,7 @@ class MissionRepository {
             return convertBigIntsToNumbers(result);
         } catch (err) {
             console.error(err);
-            throw new Error(`미션 조회 중 오류가 발생했습니다: ${err.message}`);
+            throw new InternalServerError('미션 조회 중에 데이터베이스 오류가 발생했습니다.');
         }
     }
 
@@ -56,7 +62,7 @@ class MissionRepository {
             return result.map(convertBigIntsToNumbers);
         } catch (err) {
             console.error(err);
-            throw new Error(`미션 조회 중 오류가 발생했습니다: ${err.message}`);
+            throw new InternalServerError('미션 조회 중에 데이터베이스 오류가 발생했습니다.');
         }
     }
 }

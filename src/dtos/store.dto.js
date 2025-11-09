@@ -11,8 +11,8 @@ export const createStoreRequest = (body) => {
 export const createStoreResponse = (store) => {
   return {
     storeId: store.storeId,
-    storeName: store.storeName,
-    storeAddress: store.storeAddress,
+    storeName: store.name,
+    storeAddress: store.address,
     foodType: store.foodTypeId,
     town: store.townId,
   };

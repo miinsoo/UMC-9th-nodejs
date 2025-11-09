@@ -31,9 +31,6 @@ class StoreRepository {
             });
             return convertBigIntsToNumbers(result);
         } catch (err) {
-            if (err instanceof NotFoundError) {
-                throw err;
-            }
             console.error(err);
             throw new InternalServerError('가게 조회 중에 데이터베이스 오류가 발생했습니다.');
         }

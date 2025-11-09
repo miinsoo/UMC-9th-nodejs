@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { createActivatedMissionRequest, getActivatedMissionRequest, completeActivatedMissionRequest } from "../dtos/activatedMission.dto.js";
 
 class ActivatedMissionController {
@@ -10,10 +11,9 @@ class ActivatedMissionController {
             console.log("활성화된 미션 추가 요청 받음");
             const activatedMissionData = req.body;
             const newActivatedMission = await this.activatedMissionService.addActivatedMission(createActivatedMissionRequest(activatedMissionData));
-            return res.success({
-                code: 201,
-                message: "가게를 성공적으로 추가했습니다.",
-                result: newActivatedMission,
+            return res.status(StatusCodes.CREATED).success({
+                message: "활성화된 미션을 성공적으로 추가했습니다.",
+                data: newActivatedMission,
             });
         } catch (error) {
             next(error);
@@ -25,10 +25,9 @@ class ActivatedMissionController {
             const queries = req.query;
             const activatedMission = await this.activatedMissionService.getActivatedMission(getActivatedMissionRequest(queries));
             console.log(activatedMission);
-            return res.success({
-                code: 200,
+            return res.status(StatusCodes.OK).success({
                 message: "활성화된 미션을 성공적으로 조회했습니다.",
-                result: activatedMission,
+                data: activatedMission,
             });
         } catch (error) {
             next(error);
@@ -40,10 +39,9 @@ class ActivatedMissionController {
             console.log("활성화된 미션 완료 요청 받음");
             const activatedMissionData = req.body;
             const completedActivatedMission = await this.activatedMissionService.completeActivatedMission(completeActivatedMissionRequest(activatedMissionData));
-            return res.success({
-                code: 200,
+            return res.status(StatusCodes.OK).success({
                 message: "활성화된 미션을 성공적으로 완료했습니다.",
-                result: completedActivatedMission,
+                data: completedActivatedMission,
             });
         } catch (error) {
             next(error);

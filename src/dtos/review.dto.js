@@ -10,8 +10,8 @@ export const createReviewRequest = (body) => {
 
 export const createReviewResponse = (review) => {
   return {
-    reviewId: review.reviewId,
+    reviewId: review.id,
     storeName: review.storeName,
-    reviewImgUrls: review.reviewImgUrls,
+    reviewImgUrls: review.images,
   };
 };

@@ -1,5 +1,6 @@
 import e from "cors";
 import { createStoreRequest } from "../dtos/store.dto.js";
+import { StatusCodes } from "http-status-codes";
 
 class StoreController {
     constructor(storeService) {
@@ -11,10 +12,9 @@ class StoreController {
             console.log("가게 추가 요청 받음");
             const storeData = req.body;
             const newStore = await this.storeService.addStore(createStoreRequest(storeData));
-            return res.success({
-                code: 201,
+            return res.status(StatusCodes.CREATED).success({
                 message: "가게를 성공적으로 추가했습니다.",
-                result: newStore,
+                data: newStore,
             });
         } catch (error) {
             next(error);

@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { createMissionRequest, getMissionByStoreIdRequest } from "../dtos/mission.dto.js";
 
 class MissionController {
@@ -13,10 +14,9 @@ class MissionController {
             const missionData = req.body;
             const newMission = await this.missionService.addMission(createMissionRequest(missionData));
             console.log("New Mission:", newMission);
-            return res.success({
-                code: 201,
-                message: "가게를 성공적으로 추가했습니다.",
-                result: newMission,
+            return res.status(StatusCodes.CREATED).success({
+                message: "미션을 성공적으로 추가했습니다.",
+                data: newMission,
             });
         } catch (error) {
             next(error);
@@ -28,11 +28,10 @@ class MissionController {
             const params = req.params;
             const mission = await this.missionService.getMissionByStoreId(getMissionByStoreIdRequest(params));
             console.log(mission);
-            return res.success({
-                code: 200,
+            return res.status(StatusCodes.OK).success({
                 message: "미션을 성공적으로 조회했습니다.",
-                result: mission,
-            });
+                data: mission,
+            }); 
         } catch (error) {
             next(error);
         }

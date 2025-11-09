@@ -60,16 +60,16 @@ class ReviewRepository {
                 return null;
             }
 
-            return {
+            return convertBigIntsToNumbers({
                 id: result.id,
-                store_id: result.storeId,
-                store_name: result.store.name,
-                user_id: result.userId,
+                storeId: result.storeId,
+                storeName: result.store.name,
+                userId: result.userId,
                 text: result.text,
                 rating: result.rating,
-                images: result.reviewImgs.map(img => img.img_url),
-                created_at: result.created_at,
-            };
+                images: result.reviewImgs.map(img => img.imgUrl),
+                createdAt: result.createdAt,
+            });
         } catch (err) {
             console.error(err);
             throw new InternalServerError('리뷰 정보를 가져오는 중에 데이터베이스 오류가 발생했습니다.');
