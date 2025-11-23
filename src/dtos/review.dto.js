@@ -1,7 +1,7 @@
-export const createReviewRequest = (body) => {
+export const createReviewRequest = (body, userId) => {
   return {
     storeId: body.store_id,
-    userId: body.user_id,
+    userId: BigInt(userId),
     text: body.text,
     rating: body.rating,
     imgCount: body.img_count,

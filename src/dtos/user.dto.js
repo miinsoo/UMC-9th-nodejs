@@ -1,15 +1,42 @@
 export const bodyToUser = (body) => {
-  const birth = new Date(body.birth); //날짜 변환
+  const birth = new Date(body.birth); 
   
   return {
-    email: body.email, //필수 
-    name: body.name, // 필수
-    gender: body.gender, // 필수
-    birth, // 필수
-    address: body.address || "", //선택 
-    detailAddress: body.detailAddress || "", //선택 
-    phoneNumber: body.phoneNumber,//필수
-    preferences: body.preferences,// 필수 
-    password : body.password,//필수
+    email: body.email, 
+    name: body.name, 
+    gender: body.gender, 
+    birth, 
+    address: body.address || "", 
+    detailAddress: body.detailAddress || "", 
+    phoneNumber: body.phoneNumber,
+    preferences: body.preferences,
+    password : body.password,
+  };
+};
+
+export const userUpdateProfileRequest = (body) => {
+  const birthDate = body.birthDate ? new Date(body.birthDate) : undefined;
+  
+  return {
+    name: body.name, 
+    gender: body.gender, 
+    birthDate: birthDate, 
+    highAddress: body.highAddress,
+    lowAddress: body.lowAddress,
+    phoneNumber: body.phoneNumber,
+  };
+};
+
+export const userSignUpResponse = ({ user, preferences }) => {
+  return {
+    userId: user.id,
+    email: user.email,
+    name: user.name,
+    gender: user.gender,
+    address: user.highAddress, 
+    detailAddress: user.lowAddress,
+    phoneNumber: user.phoneNumber,
+    userPoint: user.userPoint,
+    preferences: preferences.map(pref => pref.foodType.name), 
   };
 };

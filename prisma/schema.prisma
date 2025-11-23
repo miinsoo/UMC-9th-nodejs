@@ -11,6 +11,7 @@ model User {
   id          BigInt   @id @default(autoincrement())
   name        String   @db.VarChar(255)
   gender      String   @db.VarChar(255)
+  password    String   @db.VarChar(255)
   birthDate   DateTime @map("birth_date") @db.Date
   highAddress String   @map("high_address") @db.VarChar(255)
   lowAddress  String   @map("low_address") @db.VarChar(255)

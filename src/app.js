@@ -1,14 +1,15 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import passport from "passport"; 
+import { googleStrategy, jwtStrategy } from "./auth.config.js";
 import { responseHandler } from "./middlewares/responseHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import compression from "compression";
-//import { handleUserSignUp } from "./controllers/user.controller.js";
 
-import { missionRoute, reviewRoute, storeRoute, activatedMissionRoute } from "./loader/index.js";
+import { missionRoute, reviewRoute, storeRoute, activatedMissionRoute, userRoute, authRouter } from "./loader/index.js";
 
 dotenv.config();
 
@@ -25,15 +26,36 @@ app.use(compression({
   threshold: 512,
 })); // 응답 압축
 
+passport.use(googleStrategy); // Google 인증 전략 등록
+passport.use(jwtStrategy);    // JWT 검증 전략 등록
+app.use(passport.initialize()); // Passport 초기화 미들웨어 추가
 
-// app.get("/", (req, res) => {
-//   res.send("Hello World!");
-// });
+app.get(
+  "/oauth2/callback/google",
+  passport.authenticate("google", {
+	  session: false,
+    failureRedirect: "/login-failed", // 실패 시 리다이렉트 (추가 필요)
+  }),
+  (req, res) => {
+    // 인증 성공 시 실행 (req.user에 { accessToken, refreshToken }이 담겨 있음)
+    const tokens = req.user; 
 
-// app.post("/api/v1/users/signup", handleUserSignUp);
+    // 통일된 성공 응답 포맷 사용 (200 OK)
+    res.status(200).json({
+      resultType: "SUCCESS",
+      error: null,
+      success: {
+          message: "Google 로그인 및 토큰 발급 성공!",
+          tokens: tokens, // { "accessToken": "...", "refreshToken": "..." }
+      }
+    });
+  }
+);
 
 app.use(responseHandler); // response handler middleware
 
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRoute);
 app.use('/api/missions', missionRoute);
 app.use('/api/reviews', reviewRoute);
 app.use('/api/stores', storeRoute);

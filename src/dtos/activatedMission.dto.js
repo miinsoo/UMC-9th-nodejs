@@ -1,20 +1,20 @@
-export const createActivatedMissionRequest = (body) => {
+export const createActivatedMissionRequest = (body, userId) => {
   return {
     missionId: body.mission_id,
-    userId: body.user_id,
+    userId: BigInt(userId),
   };
 };
 
-export const getActivatedMissionRequest = (query) => {
+export const getActivatedMissionRequest = (userId) => {
   return {
-    userId: Number(query.userId),
+    userId: BigInt(userId),
   };
 };
 
-export const completeActivatedMissionRequest = (body) => {
+export const completeActivatedMissionRequest = (body, userId) => {
   return {
     ActivatedMissionId: body.activated_mission_id,
-    userId: body.user_id,
+    userId: BigInt(userId),
   };
 }
 

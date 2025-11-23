@@ -1,8 +1,8 @@
 import express from "express";
 
-const reviewRouter = (reviewController) => {  
+const reviewRouter = (reviewController, isLogin) => {  
     const router = express.Router();
-    router.post("/", reviewController.handleAddReview.bind(reviewController));
+    router.post("/", isLogin, reviewController.handleAddReview.bind(reviewController));
     return router;
 }
 

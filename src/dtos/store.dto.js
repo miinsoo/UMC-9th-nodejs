@@ -1,10 +1,10 @@
-export const createStoreRequest = (body) => {
+export const createStoreRequest = (body, userId) => {
   return {
     storeName: body.store_name,
     storeAddress: body.store_address,
     foodType: body.food_type,
     town: body.town,
-    userId: body.user_id,
+    userId: BigInt(userId),
   };
 };
 

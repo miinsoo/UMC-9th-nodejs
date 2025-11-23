@@ -10,7 +10,8 @@ class ActivatedMissionController {
         try {
             console.log("활성화된 미션 추가 요청 받음");
             const activatedMissionData = req.body;
-            const newActivatedMission = await this.activatedMissionService.addActivatedMission(createActivatedMissionRequest(activatedMissionData));
+            const userId = req.user.id;
+            const newActivatedMission = await this.activatedMissionService.addActivatedMission(createActivatedMissionRequest(activatedMissionData, userId));
             return res.status(StatusCodes.CREATED).success({
                 message: "활성화된 미션을 성공적으로 추가했습니다.",
                 data: newActivatedMission,
@@ -22,8 +23,8 @@ class ActivatedMissionController {
     async handleGetActivatedMission(req, res, next) {
         try {
             console.log("활성화된 미션 조회 요청 받음");
-            const queries = req.query;
-            const activatedMission = await this.activatedMissionService.getActivatedMission(getActivatedMissionRequest(queries));
+            const userId = req.user.id;
+            const activatedMission = await this.activatedMissionService.getActivatedMission(getActivatedMissionRequest(userId));
             console.log(activatedMission);
             return res.status(StatusCodes.OK).success({
                 message: "활성화된 미션을 성공적으로 조회했습니다.",
@@ -38,7 +39,8 @@ class ActivatedMissionController {
         try {
             console.log("활성화된 미션 완료 요청 받음");
             const activatedMissionData = req.body;
-            const completedActivatedMission = await this.activatedMissionService.completeActivatedMission(completeActivatedMissionRequest(activatedMissionData));
+            const userId = req.user.id;
+            const completedActivatedMission = await this.activatedMissionService.completeActivatedMission(completeActivatedMissionRequest(activatedMissionData, userId));
             return res.status(StatusCodes.OK).success({
                 message: "활성화된 미션을 성공적으로 완료했습니다.",
                 data: completedActivatedMission,

@@ -1,8 +1,8 @@
 import express from "express";
 
-const storeRouter = (storeController) => {
+const storeRouter = (storeController, isLogin) => {
     const router = express.Router();
-    router.post("/", storeController.handleAddStore.bind(storeController));
+    router.post("/", isLogin, storeController.handleAddStore.bind(storeController));
 
     return router;
 }
