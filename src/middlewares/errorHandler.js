@@ -37,7 +37,7 @@ export const errorHandler = (err, req, res, next) => {
     return res.status(statusCode).json(createResponse({
         resultType: "FAIL",
         message: errorMessage,
-        error: erroData,
+        error: errorData,
         success: null
     }));
 }
