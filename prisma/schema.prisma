@@ -1,0 +1,237 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          BigInt   @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  gender      String   @db.VarChar(255)
+  password    String   @db.VarChar(255)
+  birthDate   DateTime @map("birth_date") @db.Date
+  highAddress String   @map("high_address") @db.VarChar(255)
+  lowAddress  String   @map("low_address") @db.VarChar(255)
+  userPoint   Int      @map("user_point")
+  isBusiness  Boolean  @map("is_business")
+  isActive    Boolean  @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  email       String   @unique @db.VarChar(255)
+  phoneNumber String?  @map("phone_number") @db.VarChar(255)
+
+  // 관계
+  activatedMissions    ActivatedMission[]
+  reviews              Review[]
+  stores               Store[]
+  userFoodTypes        UserFoodType[]
+  notifications        Notification[]
+  notificationSettings NotificationSetting[]
+
+  @@map("user")
+}
+
+model ActivatedMission {
+  id        BigInt   @id @default(autoincrement())
+  state     String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  missionId BigInt   @map("mission_id")
+  userId    BigInt   @map("user_id")
+
+  // 관계
+  user    User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "activated_mission_ibfk_2")
+  mission Mission @relation(fields: [missionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "activated_mission_ibfk_3")
+
+  @@index([missionId], map: "idx_mission_id")
+  @@index([userId], map: "idx_user_id")
+  @@map("activated_mission")
+}
+
+model FoodType {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(255)
+
+  // 관계
+  stores        Store[]
+  userFoodTypes UserFoodType[]
+
+  @@map("food_type")
+}
+
+model Mission {
+  id               BigInt   @id @default(autoincrement())
+  minPaymentAmount Int      @map("min_payment_amount")
+  rewardPoints     Int      @map("reward_points")
+  deadLine         DateTime @map("dead_line") @db.Date
+  createdAt        DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  storeId          BigInt   @map("store_id")
+
+  // 관계
+  activatedMissions ActivatedMission[]
+  stores            Store              @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "mission_ibfk_1")
+
+  @@index([storeId], map: "idx_store_id")
+  @@map("mission")
+}
+
+model Notification {
+  id                 BigInt   @id @default(autoincrement()) // PK에 autoincrement 추가
+  title              String   @db.VarChar(255)
+  body               String   @db.VarChar(255)
+  isNotificationRead Boolean  @map("is_notification_read")
+  createdAt          DateTime @default(now()) @map("created_at") @db.DateTime(0) // non-null에서 nullable로 변경 및 default 추가
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  notificationTypeId Int      @map("notification_type_id")
+  userId             BigInt   @map("user_id")
+
+  // 관계
+  user             User             @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  notificationType NotificationType @relation(fields: [notificationTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([notificationTypeId], map: "idx_notification_type_id")
+  @@index([userId], map: "idx_user_id")
+  @@map("notification")
+}
+
+model NotificationSetting {
+  id                 BigInt   @id @default(autoincrement())
+  isAgreed           Boolean  @map("is_agreed")
+  createdAt          DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  notificationTypeId Int      @map("notification_type_id")
+  userId             BigInt   @map("user_id")
+
+  user             User             @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  notificationType NotificationType @relation(fields: [notificationTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([notificationTypeId], map: "notification_type_id")
+  @@index([userId], map: "user_id")
+  @@map("notification_settings")
+}
+
+model NotificationType {
+  id   Int    @id @default(autoincrement())
+  type String @db.VarChar(255)
+
+  // 관계
+  notifications        Notification[]
+  notificationSettings NotificationSetting[]
+
+  @@map("notification_type")
+}
+
+model Review {
+  id        BigInt   @id @default(autoincrement())
+  rating    Decimal  @db.Decimal(10, 2)
+  text      String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  storeId   BigInt   @map("store_id")
+  userId    BigInt   @map("user_id")
+
+  // 관계
+  user  User  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_2")
+  store Store @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_3")
+
+  comments   ReviewComment[]
+  reviewImgs ReviewImg[]
+
+  @@index([storeId], map: "idx_store_id")
+  @@index([userId], map: "idx_user_id")
+  @@map("review")
+}
+
+model ReviewComment {
+  id        BigInt   @id @default(autoincrement())
+  text      String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  reviewId  BigInt   @map("idx_review_id")
+
+  // 관계
+  review Review @relation(fields: [reviewId], references: [id])
+
+  @@index([reviewId], map: "idx_review_id")
+  @@map("review_comment")
+}
+
+model ReviewImg {
+  id        BigInt   @id @default(autoincrement())
+  imgUrl    String   @map("img_url") @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  reviewId  BigInt   @map("review_id")
+
+  // 관계
+  review Review @relation(fields: [reviewId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_img_ibfk_1")
+
+  @@index([reviewId], map: "idx_review_id")
+  @@map("review_img")
+}
+
+model Store {
+  id         BigInt   @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  address    String   @db.VarChar(255)
+  createdAt  DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  townId     Int      @map("town_id")
+  foodTypeId Int      @map("food_type_id")
+  userId     BigInt   @map("user_id")
+
+  // 관계
+  town     Town     @relation(fields: [townId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "store_ibfk_1")
+  foodType FoodType @relation(fields: [foodTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "store_ibfk_2")
+  user     User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "store_ibfk_3")
+
+  missions  Mission[]
+  reviews   Review[]
+  storeImgs StoreImg[]
+
+  @@index([foodTypeId], map: "idx_food_type_id")
+  @@index([townId], map: "idx_town_id")
+  @@index([userId], map: "idx_user_id")
+  @@map("store")
+}
+
+model StoreImg {
+  id        BigInt   @id @default(autoincrement())
+  imgUrl    String   @map("img_url") @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  storeId   BigInt   @map("store_id")
+
+  // 관계
+  store Store @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "store_img_ibfk_1")
+
+  @@index([storeId], map: "idx_store_id")
+  @@map("store_img")
+}
+
+model Town {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(255)
+
+  stores Store[]
+
+  @@map("town")
+}
+
+model UserFoodType {
+  id         BigInt   @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  userId     BigInt   @map("user_id")
+  foodTypeId Int      @map("food_type_id")
+
+  // 관계
+  user     User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_food_types_ibfk_1")
+  foodType FoodType @relation(fields: [foodTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_food_types_ibfk_2")
+
+  @@index([foodTypeId], map: "idx_food_type_id")
+  @@index([userId], map: "idx_user_id")
+  @@map("user_food_type")
+}
